@@ -32,34 +32,44 @@ def calculate_sales_amount(meal_type,table_count,service_level):
 # Define a function calculate_efficiency_score(shift_years, standard_tables, served_tables) that:
 def calculate_efficiency_score(shift_years, standard_tables, served_tables):
 # Calculate expected tables: 1000 + (shift_years * 100)
-    expected_tables=1000+(shift_years*100)
+    expected_tables=1000+(shift_years*100) #1300
 # Calculate table capacity: expected_tables - standard_tables
-    table_capacity=(expected_tables-standard_tables)
+    table_capacity=(expected_tables-standard_tables) #500
 # Calculate efficiency percentage: (served_tables - standard_tables) / table_capacity * 100
-    efficiency_percentage=(served_tables-standard_tables)/table_capacity*100
+    efficiency_percentage=(served_tables-standard_tables)/table_capacity*100 
 # Return the efficiency percentage
-    return efficiency_percentage
+    return round(efficiency_percentage,1)
 # Define a function determine_service_rating(efficiency_percent) that:
+rating_bonus=0
 def determine_service_rating(efficiency_percent):
+    global rating_bonus
     # Below 50%: “Learning Stage”
     if efficiency_percent<50:
+        rating_bonus=0.5
         return "Learning stage"
     # 50-60%“Capable Stage”
-    elif 50<efficiency_percent<60:
+    elif 50<=efficiency_percent<60:
+        rating_bonus=1.0
         return "Capable Stage"
     # 60-70%: “Skilled Stage”
-    elif 60<efficiency_percent<70:
+    elif 60<=efficiency_percent<70:
+        rating_bonus=1.2
         return "Skilled Stage"
     # 70-85%: “Accomplished Stage”
-    elif 70<efficiency_percent<85:
+    elif 70<=efficiency_percent<85:
+        rating_bonus=1.5
         return "Accomplished stage"
     # Above 85%: “Master Stage”
     else:
+        rating_bonus=1.8
         return "Master Stage"
+
 # Define a : function calculate_tip_earnings(sales, tables, rating_bonus) that:
 def calculate_tip_earnings(sales, tables, rating_bonus):
     # Base tips = sales * 0.05 + tables * 2
     base_tips=sales*0.05+tables*2
+    final_tips=base_tips*rating_bonus
+    return round(final_tips, 1)
     # Rating bonuses: Learning=0.5, Capable=1.0, Skilled=1.2, Accomplished=1.5, Master=1.8
     # Return the final tips rounded to 1 decimal place
 # Define a function requires_mentoring(service_weeks, total_tables, avg_efficiency) that:
@@ -77,15 +87,8 @@ def requires_monitoring(service_weeks, total_tables,avg_efficiency):
     else:
         return False
 # Define a function generate_service_summary(server, meal_type, tables, service_level, shift_years, standard_tables, served_tables, service_weeks) that
-server="Quinn"
-meal_type="dinner"
-tables=45 
-service_level="high"
-shift_years= 3 
-standard_tables=800
-served_tables=1150
-service_week=3
-def generate_service_summary(server, meal_type, tables, service_level,shift_years, standard_tables, served_tables, service_weeks):
+
+def generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks):
     # Calls all necessary functions to calculate metrics
     # Prints a formatted summary (no return value)
     # Include all calculated values and recommendations
@@ -93,19 +96,49 @@ def generate_service_summary(server, meal_type, tables, service_level,shift_year
     print("*"*40)
     print(f"Service Summary for: {server}")
     print(f"Meal Type: {meal_type}")
-    print(f"Tables Served: {tables}")
+    print(f"Tables Served: {table_count}")
     print(f"Service Level: {service_level}")
-    print(f"Sales amount: ${calculate_sales_amount}")
+    print(f"Sales amount: ${calculate_sales_amount(meal_type,table_count,service_level)}")
     print(f"Efficiency Analysis:")
     print(f"Experience: {shift_years} years, Standar: {standard_tables}, Served tables: {served_tables}")
-    print(f"Efficiency: {calculate_efficiency_score} %")
-    print(f"Service rating: {determine_service_rating}")
-    print(f"Tip Earnings: ${calculate_tip_earnings}")
+    print(f"Efficiency: {calculate_efficiency_score(shift_years, standard_tables, served_tables)} %")
+    print(f"Service rating: {determine_service_rating(calculate_efficiency_score(shift_years, standard_tables, served_tables))}")
+    print(f"Tip Earnings: ${calculate_tip_earnings(calculate_sales_amount(meal_type,table_count,service_level), table_count, rating_bonus)}")
     print(f"Service weeks: {service_weeks}")
-    print(f"Mentoring required: {requires_monitoring}")
+    print(f"Mentoring required: { requires_monitoring(service_weeks, served_tables,calculate_efficiency_score(shift_years, standard_tables, served_tables))}")
 
+server="Quinn"
+meal_type="dinner"
+table_count=45 
+service_level="high"
+shift_years= 3 
+standard_tables=800
+served_tables=1150
+service_weeks=3
+generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
 
+server="Reese"
+meal_type="lunch"
+table_count=60
+service_level="medium"
+shift_years= 5
+standard_tables=900
+served_tables=1300
+service_weeks=5
+generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
 
+server="Skyler"
+meal_type="breakfast"
+table_count=30
+service_level="low"
+shift_years= 8
+standard_tables=850
+served_tables=950
+service_weeks=7
+generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
+# Record 1: “Quinn”, “dinner”, 45 tables, “high”, shift_years=3, standard_tables=800, served_tables=1150, service_weeks=3
+# Record 2: “Reese”, “lunch”, 60 tables, “medium”, shift_years=5, standard_tables=900, served_tables=1300, service_weeks=5
+# Record 3: “Skyler”, “breakfast”, 30 tables, “low”, shift_years=8, standard_tables=850, served_tables=950, service_weeks=7
 #     RESTAURANT SERVICE ANALYZER
 # ========================================
 # Service Summary for: Quinn
@@ -158,6 +191,3 @@ def generate_service_summary(server, meal_type, tables, service_level,shift_year
 
 # Testing Inputs: Test your system with these service records:
 
-# Record 1: “Quinn”, “dinner”, 45 tables, “high”, shift_years=3, standard_tables=800, served_tables=1150, service_weeks=3
-# Record 2: “Reese”, “lunch”, 60 tables, “medium”, shift_years=5, standard_tables=900, served_tables=1300, service_weeks=5
-# Record 3: “Skyler”, “breakfast”, 30 tables, “low”, shift_years=8, standard_tables=850, served_tables=950, service_weeks=7
