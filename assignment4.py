@@ -76,66 +76,42 @@ def calculate_tip_earnings(sales, tables, rating_bonus):
 def requires_monitoring(service_weeks, total_tables,avg_efficiency):
     # Returns True if service_weeks >= 6 AND avg_efficiency < 50
     if service_weeks>=6 and avg_efficiency<50:
-        return True
+        return "Yes"
     # Returns True if total_tables < 100 AND avg_efficiency < 60
     elif total_tables < 100 and avg_efficiency < 60:
-        return True
+        return "Yes"
     # Returns True if service_weeks >= 4 AND avg_efficiency < 40
     elif service_weeks >= 4 and avg_efficiency < 40:
-        return True
+        return "Yes"
     # Otherwise returns False
     else:
-        return False
+        return "No"
 # Define a function generate_service_summary(server, meal_type, tables, service_level, shift_years, standard_tables, served_tables, service_weeks) that
 
 def generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks):
     # Calls all necessary functions to calculate metrics
     # Prints a formatted summary (no return value)
     # Include all calculated values and recommendations
-    print("RESTAURANT SERVICE ANALYZER")
-    print("*"*40)
+    
+    print("="*40)
     print(f"Service Summary for: {server}")
+    print("-"*40)
     print(f"Meal Type: {meal_type}")
     print(f"Tables Served: {table_count}")
     print(f"Service Level: {service_level}")
     print(f"Sales amount: ${calculate_sales_amount(meal_type,table_count,service_level)}")
     print(f"Efficiency Analysis:")
-    print(f"Experience: {shift_years} years, Standar: {standard_tables}, Served tables: {served_tables}")
-    print(f"Efficiency: {calculate_efficiency_score(shift_years, standard_tables, served_tables)} %")
-    print(f"Service rating: {determine_service_rating(calculate_efficiency_score(shift_years, standard_tables, served_tables))}")
+    print(f"  Experience: {shift_years} years, Standar: {standard_tables}, Served tables: {served_tables}")
+    print(f"  Efficiency: {calculate_efficiency_score(shift_years, standard_tables, served_tables)} %")
+    print(f"  Service rating: {determine_service_rating(calculate_efficiency_score(shift_years, standard_tables, served_tables))}")
     print(f"Tip Earnings: ${calculate_tip_earnings(calculate_sales_amount(meal_type,table_count,service_level), table_count, rating_bonus)}")
     print(f"Service weeks: {service_weeks}")
     print(f"Mentoring required: { requires_monitoring(service_weeks, served_tables,calculate_efficiency_score(shift_years, standard_tables, served_tables))}")
-
-server="Quinn"
-meal_type="dinner"
-table_count=45 
-service_level="high"
-shift_years= 3 
-standard_tables=800
-served_tables=1150
-service_weeks=3
-generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
-
-server="Reese"
-meal_type="lunch"
-table_count=60
-service_level="medium"
-shift_years= 5
-standard_tables=900
-served_tables=1300
-service_weeks=5
-generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
-
-server="Skyler"
-meal_type="breakfast"
-table_count=30
-service_level="low"
-shift_years= 8
-standard_tables=850
-served_tables=950
-service_weeks=7
-generate_service_summary(server, meal_type, table_count, service_level,shift_years, standard_tables, served_tables, service_weeks)
+    print()
+print("    RESTAURANT SERVICE ANALYZER")
+generate_service_summary("Quinn", "dinner", 45, "high",3, 800, 1150, 3)
+generate_service_summary("Reese", "lunch", 60, "medium", 5, 900, 1300, 5)
+generate_service_summary("Skyler", "breakfast", 30, "low",8, 850, 950, 7)
 # Record 1: “Quinn”, “dinner”, 45 tables, “high”, shift_years=3, standard_tables=800, served_tables=1150, service_weeks=3
 # Record 2: “Reese”, “lunch”, 60 tables, “medium”, shift_years=5, standard_tables=900, served_tables=1300, service_weeks=5
 # Record 3: “Skyler”, “breakfast”, 30 tables, “low”, shift_years=8, standard_tables=850, served_tables=950, service_weeks=7
