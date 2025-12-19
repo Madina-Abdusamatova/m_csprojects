@@ -32,14 +32,14 @@ def process_gym_bookings(members_db, schedule_db, booking_queue):
         try:
             cost = book_session(members_db, schedule_db, member_id, class_name, spots)
             total_credits_used += cost
-        except KeyError as e:
-            print(f"Booking Error for {member_id}: '{e}'")
-            declined_count += 1
-        except ValueError as e:
+        except (KeyError, ValueError) as e:
             print(f"Booking Error for {member_id}: {e}")
             declined_count += 1
     
-    return {"credits_used": total_credits_used, "declined_bookings": declined_count}
+    output = {}
+    output["credits_used"]=total_credits_used
+    output["declined_bookings"]=declined_count
+    return output
 
 
 schedule = {
